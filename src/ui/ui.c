@@ -6,6 +6,7 @@
 #include <readline/history.h>
 
 int nemu_state = END;
+void parse(char *);
 
 /* Use the readline library to provide more flexibility.
  * Return a line read from standard input. */
@@ -51,19 +52,19 @@ void init_signal()
 
 void main_loop() 
 {
-    char *cmd;
+    char *sexp;
 
     while(1) {
-        cmd = rl_gets();  /* get a line from stdin */
-        if (cmd == NULL) {
+        sexp = rl_gets();  /* get a line from stdin */
+        if (sexp == NULL) {
             printf("\n");
             return;
-        } else if (strlen(cmd) == 0) {
+        } else if (strlen(sexp) == 0) {
             continue;
-        } else if (strcmp(cmd, "exit") == 0) {
+        } else if (strcmp(sexp, "exit") == 0) {
             return;
         } else {
-            printf("command: '%s'\n", cmd);
+            parse(sexp);
         }
     }
 }

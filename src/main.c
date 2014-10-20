@@ -4,6 +4,7 @@
 
 void main_loop();
 void init_signal();
+void init_regex();
 
 int enable_debug = false;
 int quiet = false;
@@ -29,6 +30,7 @@ int main(int argc, char *argv[]) {
 	process_args(argc, argv);
 
 	init_signal();
+    init_regex();
 
 	main_loop();
 
