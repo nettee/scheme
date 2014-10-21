@@ -5,16 +5,19 @@
 #include <sys/types.h>
 #include <regex.h>
 
-#define NR_TK 32
+#include "parser/token.h"
+
+int nr_token;
 
 enum {
-    NOTYPE, BRACKET, DIGIT, SYMBOL,
+    NOTYPE, DIGIT, SYMBOL,
+    OPEN_BR, CLOSE_BR,
 };
 
 static char *type_repr(int type)
 {
     switch(type) {
-        case BRACKET: return "bracket";
+        case OPEN_BR: case CLOSE_BR: return "bracket";
         case DIGIT: return "digit";
         case SYMBOL: return "symbol";
         default:
@@ -27,7 +30,8 @@ static struct rule {
     int token_type;
 } rules[] = {
     {" +",  NOTYPE},    
-    {"\\(", BRACKET}, {"\\)", BRACKET},
+    {"\\(", OPEN_BR}, {"\\)", CLOSE_BR},
+    {"\\[", OPEN_BR}, {"\\]", CLOSE_BR},
 
     {"[0-9]+", DIGIT},
     {"[-+!&*/?a-z_][-+!&*/?a-z_0-9]*", SYMBOL},
@@ -53,14 +57,6 @@ void init_regex()
         }
     }
 }
-
-typedef struct token {
-    int type;
-    char *str;
-} Token;
-
-Token tokens[NR_TK];
-int nr_token;
 
 static bool make_token(char *e) 
 {
