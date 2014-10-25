@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+
+#include "common.h"
 #include "data/atom.h"
 
 #define BUCKET_SIZE 64
@@ -9,7 +11,7 @@
 typedef struct atom_ {
     struct atom_ *next;
     int len;
-    char *str;
+    byte *str;
 } atom;
 static atom *buckets[BUCKET_SIZE];
 
@@ -23,21 +25,35 @@ unsigned hash(const char *s)
     return h % BUCKET_SIZE;
 }
 
-char *atom_new(const char *str)
+byte *atom_new(const char *str, int len)
 {
     assert(str != NULL);
+    assert(len >= 0);
 
     unsigned h = hash(str);
 
     atom *q;
     for (q = buckets[h]; q != NULL; q = q->next) {
         /* if atom already in table, simply return the atom */
-        if (strcmp(q->str, str) == 0) {
-            return q->str;
+        if (q->len == len) {
+            int i;
+            for (i = 0; i < len; i++) {
+                if (q->str[i] != str[i]) {
+                    break;
+                }
+            }
+            if (i == len) {
+                return q->str;
+            }
         }
     }
     q = malloc(sizeof(atom));
-    q->str = strdup(str);
+    q->len = len;
+    q->str = (byte *)malloc(len + 1);
+    if (len > 0) {
+        memcpy(q->str, str, len);
+    }
+    q->str[len] = '\0';
     q->next = buckets[h];
     buckets[h] = q;
     return q->str;

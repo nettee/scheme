@@ -9,6 +9,7 @@
 #include <string.h>
 
 typedef uint8_t bool;
+typedef uint8_t byte;
 
 #define false 0
 #define true 1

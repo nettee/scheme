@@ -15,5 +15,3 @@ void parse(char *expr)
     Log("Tokenize into %d tokens.", n_tokens);
     read_from_tokens(n_tokens);
 }
-
-

@@ -6,6 +6,7 @@
 #include <regex.h>
 
 #include "parser/token.h"
+#include "data/atom.h"
 
 static int nr_token;
 
@@ -70,7 +71,6 @@ int tokenize(char *e)
 
         /* Try all rules one by one. */
         for(i = 0; i < NR_REGEX; i++) {
-
             if(regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0) {
                 char *substr_start = e + position;
                 /* rm_eo is exact the length of sub-string */
@@ -81,7 +81,7 @@ int tokenize(char *e)
                 int this_type = rules[i].token_type;
                 if (this_type != NOTYPE) { 
                     tokens[nr_token].type = this_type;
-                    tokens[nr_token].str = strndup(substr_start, substr_len);
+                    tokens[nr_token].str = (char *)atom_new(substr_start, substr_len);
                     Log("token[%d], %s \"%s\"", nr_token, type_repr(this_type), tokens[nr_token].str);
                     ++nr_token;
                 }
