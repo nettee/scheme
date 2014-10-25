@@ -1,38 +1,63 @@
 #include "common.h"
 
+#include <stdio.h>
 #include <unistd.h>
+#include <errno.h>
 
-void main_loop();
 void init_signal();
 void init_regex();
+void main_loop();
+void parse(char *);
 
 int enable_debug = false;
 int quiet = false;
+int interactive = true;
 
-static void process_args(int argc, char *argv[]) {
-	int opt;
-	while( (opt = getopt(argc, argv, "dq")) != -1) {
-		switch(opt) {
-			case 'd':
-				enable_debug = true;
-				break;
-			case 'q':
-				quiet = true;
-				break;
-			default:
-				test(0, "bad option = %s\n", optarg);
-				break;
-		}
-	}
+void interpret(FILE *fp)
+{
+    char line[200];
+    fgets(line, 200, fp);
+    parse(line);
 }
 
 int main(int argc, char *argv[]) {
-	process_args(argc, argv);
+    char *filename = NULL;
 
-	init_signal();
+    init_signal();
     init_regex();
 
-	main_loop();
+    int opt;
+    while((opt = getopt(argc, argv, "dqs:")) != -1) {
+        switch(opt) {
+        case 'd':
+            enable_debug = true;
+            break;
+        case 'q':
+            quiet = true;
+            break;
+        case 's':
+            interactive = false;
+            printf("Interpret from file %s\n", optarg);
+            filename = strdup(optarg);
+            break;
+        default:
+            test(0, "bad option = %s\n", optarg);
+            break;
+        }
+    }
 
-	return 0;
+    if (interactive) {
+        main_loop();
+    } else {
+        assert(filename != NULL);
+        FILE *fp = fopen(filename, "r");
+        if (fp == NULL) {
+            fprintf(stderr, "%s: %s: %s\n", argv[0], optarg, strerror(errno));
+            return 1;
+        }
+        interpret(fp);
+        fclose(fp);
+    }
+
+    return 0;
 }

@@ -13,6 +13,9 @@ scheme: $(OBJS)
 run: scheme
 	./scheme -d 2>&1 | tee log.txt
 
+interpret: scheme
+	./scheme -d -s sample.scm 2>&1 | tee log.txt
+
 gdb: scheme
 	gdb --args ./scheme -dq 
 

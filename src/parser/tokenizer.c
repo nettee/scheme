@@ -30,7 +30,7 @@ static struct rule {
     char *regex;
     int token_type;
 } rules[] = {
-    {" +",  NOTYPE},    
+    {"[ \n]+",  NOTYPE},    
     {"\\(", OPEN_BR}, {"\\)", CLOSE_BR},
     {"\\[", OPEN_BR}, {"\\]", CLOSE_BR},
 
@@ -73,9 +73,7 @@ int tokenize(char *e)
         for(i = 0; i < NR_REGEX; i++) {
             if(regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0) {
                 char *substr_start = e + position;
-                /* rm_eo is exact the length of sub-string */
                 int substr_len = pmatch.rm_eo;
-
                 position += substr_len;
 
                 int this_type = rules[i].token_type;

@@ -8,11 +8,6 @@
 
 #define BUCKET_SIZE 64
 
-typedef struct atom_ {
-    struct atom_ *next;
-    int len;
-    byte *str;
-} atom;
 static atom *buckets[BUCKET_SIZE];
 
 /* copy from K&R C, page 144 */
@@ -71,5 +66,10 @@ void print_bucket()
         }
         printf("\n");
     }
+}
+
+void print_bytes(atom *it)
+{
+    return;
 }
         
