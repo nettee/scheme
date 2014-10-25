@@ -24,9 +24,17 @@ static listnode *make_atom(atom *a)
     return q;
 }
 
-static listnode *insert_after(listnode *tail, atom *a)
+static listnode *make_sublist(list p)
 {
-    listnode *q = make_atom(a);
+    listnode *q = malloc(sizeof(listnode));
+    q->ntype = SUBLIST;
+    q->next = NULL;
+    q->sub = p;
+    return q;
+}
+
+static listnode *insert_after(listnode *tail, listnode *q)
+{
     tail->next = q;
     return q;
 }
@@ -44,7 +52,12 @@ list read_from_tokens()
         listnode *head = make_head();
         listnode *tail = head;
         while (first_token().type != CLOSE_BR) {
-            tail = insert_after(tail, pop_token().element);
+            listnode *q = read_from_tokens();
+            if (q->ntype == ATOM) {  /* atom, single node */
+                tail = insert_after(tail, q);
+            } else {  /* sublist */
+                tail = insert_after(tail, make_sublist(q));
+            }
         }
         pop_token();  /* pop off ')' */
         return head;
@@ -55,17 +68,31 @@ list read_from_tokens()
     }
 }
 
-void print_list(list p)
+static void print_list_rec(list p)
 {
     if (p->ntype == ATOM) {  /* single atom */
-        printf("%s\n", atom_repr(p->item));
+        printf("%s", atom_repr(p->item));
     } else {  /* list */
-        printf("(");
+        putchar('(');
         listnode *q;
         for (q = p->next; q != NULL; q = q->next) {
-            printf(" %s", atom_repr(q->item));
+            if (q != p->next) {
+                putchar(' ');
+            }
+            if (q->ntype == ATOM) {
+                printf("%s", atom_repr(q->item));
+            } else if (q->ntype == SUBLIST) {
+                print_list_rec(q->sub);
+            } else {
+                test(0, "node type is neither ATOM nor SUBLIST");
+            }
         }
-        printf(")\n");
+        putchar(')');
     }
 }
 
+void print_list(list p)
+{
+    print_list_rec(p);
+    putchar('\n');
+}
