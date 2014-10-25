@@ -2,7 +2,8 @@
 #define __TYPE_H__
 
 enum {
-    NOTYPE, DIGIT, SYMBOL,
+    NOTYPE, DIGIT, 
+    IDENTIFIER,
     OPEN_BR, CLOSE_BR,
 };
 

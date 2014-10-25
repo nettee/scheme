@@ -9,6 +9,11 @@
 #include "parser/token.h"
 #include "data/type.h"
 
+/* used by other modules */
+Token tokens[NR_TK];
+int begin = 0;
+int end = 0;
+
 static int nr_token;
 
 static struct rule {
@@ -20,12 +25,13 @@ static struct rule {
     {"\\[", OPEN_BR}, {"\\]", CLOSE_BR},
 
     {"[0-9]+", DIGIT},
-    {"[-+!&*/?a-z_][-+!&*/?a-z_0-9]*", SYMBOL},
+    /* an identifier cannot start by +/-/. , except single + and - */
+    {"[!$%&*/:<=>?@^~A-Za-z_][-+!$%&*./:<=>?@^~A-Za-z_0-9]*", IDENTIFIER},
+    {"[-+]", IDENTIFIER},
 };
 
 /* number of rules */
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
-
 static regex_t re[NR_REGEX];
 
 void init_regex() 
@@ -62,13 +68,11 @@ int tokenize(char *e)
                 position += substr_len;
 
                 int this_type = rules[i].token_type;
-                Token tk = tokens[nr_token];
                 if (this_type != NOTYPE) { 
-                    tk.type = this_type;
-                    tk.element = atom_new(substr_start, this_type, substr_len);
-//                    char *s = strndup(substr_start, substr_len);
-//                    Log("token[%d], %s \"%s\"", nr_token, type_repr(tk.element->type), s);
-                    Log("token[%d], %s \"%s\", size %d", nr_token, type_repr(tk.element->type), atom_repr(tk.element, this_type), tk.element->len);
+                    tokens[nr_token].type = this_type;
+                    tokens[nr_token].element = atom_new(substr_start, this_type, substr_len);
+                    Token tk = tokens[nr_token];
+                    Log("token[%d], %s \"%s\", size %d", nr_token, type_repr(tk.element->type), atom_repr(tk.element), tk.element->len);
                     ++nr_token;
                 }
                 break; /* jump out of for loop */
@@ -78,5 +82,19 @@ int tokenize(char *e)
             test(0, "no match at position %d\n%s\n%*.s^\n", position, e, position, "");
         }
     }
+    begin = 0;
+    end = nr_token;
     return nr_token;
+}
+
+Token pop_token()
+{
+    test(begin < end, "Pop token fails");
+    return tokens[begin++];
+}
+
+Token first_token()
+{
+    test(begin <= end, "Bad tokens");
+    return tokens[begin];
 }

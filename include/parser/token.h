@@ -7,4 +7,5 @@ typedef struct token {
     atom *element;
 } Token;
 
-Token tokens[NR_TK];
+Token pop_token();
+Token first_token();
