@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "atom.h"
+#include "data/atom.h"
 
 #define BUCKET_SIZE 64
 

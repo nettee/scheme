@@ -6,5 +6,3 @@ typedef struct token {
 } Token;
 
 Token tokens[NR_TK];
-
-

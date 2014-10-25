@@ -7,7 +7,7 @@
 
 #include "parser/token.h"
 
-int nr_token;
+static int nr_token;
 
 enum {
     NOTYPE, DIGIT, SYMBOL,
@@ -58,7 +58,7 @@ void init_regex()
     }
 }
 
-static bool make_token(char *e) 
+int tokenize(char *e) 
 {
     int position = 0;
     int i;
@@ -89,14 +89,8 @@ static bool make_token(char *e)
             }
         }
         if (i == NR_REGEX) {
-            printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
-            return false;
+            test(0, "no match at position %d\n%s\n%*.s^\n", position, e, position, "");
         }
     }
-    return true; 
-}
-
-void parse(char *expr) {
-    bool res = make_token(expr);
-    printf("Parse %s.\n", res ? "succeeded" : "failed");
+    return nr_token;
 }
