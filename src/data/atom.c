@@ -20,7 +20,7 @@ unsigned hash(const char *s)
     return h % BUCKET_SIZE;
 }
 
-byte *atom_new(const char *str, int len)
+atom *atom_new(const char *str, int type, int len)
 {
     assert(str != NULL);
     assert(len >= 0);
@@ -38,11 +38,12 @@ byte *atom_new(const char *str, int len)
                 }
             }
             if (i == len) {
-                return q->str;
+                return q;
             }
         }
     }
     q = malloc(sizeof(atom));
+    q->type = type;
     q->len = len;
     q->str = (byte *)malloc(len + 1);
     if (len > 0) {
@@ -51,7 +52,12 @@ byte *atom_new(const char *str, int len)
     q->str[len] = '\0';
     q->next = buckets[h];
     buckets[h] = q;
-    return q->str;
+    return q;
+}
+
+char *atom_repr(atom *a)
+{
+    return (char *)a->str;
 }
 
 /* for test use */

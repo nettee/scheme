@@ -5,26 +5,11 @@
 #include <sys/types.h>
 #include <regex.h>
 
-#include "parser/token.h"
 #include "data/atom.h"
+#include "parser/token.h"
+#include "data/type.h"
 
 static int nr_token;
-
-enum {
-    NOTYPE, DIGIT, SYMBOL,
-    OPEN_BR, CLOSE_BR,
-};
-
-static char *type_repr(int type)
-{
-    switch(type) {
-        case OPEN_BR: case CLOSE_BR: return "bracket";
-        case DIGIT: return "digit";
-        case SYMBOL: return "symbol";
-        default:
-            test(0, "No match type representation.");
-    }
-}
 
 static struct rule {
     char *regex;
@@ -77,10 +62,11 @@ int tokenize(char *e)
                 position += substr_len;
 
                 int this_type = rules[i].token_type;
+                Token tk = tokens[nr_token];
                 if (this_type != NOTYPE) { 
-                    tokens[nr_token].type = this_type;
-                    tokens[nr_token].str = (char *)atom_new(substr_start, substr_len);
-                    Log("token[%d], %s \"%s\"", nr_token, type_repr(this_type), tokens[nr_token].str);
+                    tk.type = this_type;
+                    tk.element = atom_new(substr_start, this_type, substr_len);
+                    Log("token[%d], %s \"%s\"", nr_token, type_repr(tk.element->type), atom_repr(tk.element));
                     ++nr_token;
                 }
                 break; /* jump out of for loop */

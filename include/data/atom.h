@@ -3,10 +3,12 @@
 
 typedef struct atom_ {
     struct atom_ *next;
+    int type;
     int len;
     byte *str;
 } atom;
 
-byte *atom_new(const char *str, int len);
+atom *atom_new(const char *str, int type, int len);
+char *atom_repr(atom *);
 
 #endif
