@@ -1,7 +1,7 @@
 # setting compiler and compile options
 CC      = gcc
 LD      = ld
-CFLAGS  = -ggdb -MD -Wall -Werror -fno-strict-aliasing -I./include -O2
+CFLAGS  = -ggdb -MD -Wall -Werror -fno-strict-aliasing -I./include -O
 
 # target to compile
 CFILES  = $(shell find src/ -name "*.c")

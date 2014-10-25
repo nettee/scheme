@@ -1,1 +1,71 @@
 #include "data/list.h"
+#include "data/type.h"
+#include "data/atom.h"
+#include "parser/token.h"
+
+extern Token tokens[];
+
+enum { HEAD, ATOM, SUBLIST };
+
+static listnode *make_head()
+{
+    listnode *q = malloc(sizeof(listnode));
+    q->ntype = HEAD;
+    q->next = NULL;
+    return q;
+}
+
+static listnode *make_atom(atom *a)
+{
+    listnode *q = malloc(sizeof(listnode));
+    q->ntype = ATOM;
+    q->next = NULL;
+    q->item = a;
+    return q;
+}
+
+static listnode *insert_after(listnode *tail, atom *a)
+{
+    listnode *q = make_atom(a);
+    tail->next = q;
+    return q;
+}
+
+list make_nil()
+{
+    return make_head();
+}
+
+list read_from_tokens()
+{
+    Token tk;
+    tk = pop_token();
+    if (tk.type == OPEN_BR) {
+        listnode *head = make_head();
+        listnode *tail = head;
+        while (first_token().type != CLOSE_BR) {
+            tail = insert_after(tail, pop_token().element);
+        }
+        pop_token();  /* pop off ')' */
+        return head;
+    } else if (tk.type == CLOSE_BR) {
+        test(0, "Unexpected ')'");
+    } else {  /* single atom */
+        return make_atom(tk.element);
+    }
+}
+
+void print_list(list p)
+{
+    if (p->ntype == ATOM) {  /* single atom */
+        printf("%s\n", atom_repr(p->item));
+    } else {  /* list */
+        printf("(");
+        listnode *q;
+        for (q = p->next; q != NULL; q = q->next) {
+            printf(" %s", atom_repr(q->item));
+        }
+        printf(")\n");
+    }
+}
+

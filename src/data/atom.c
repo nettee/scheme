@@ -64,8 +64,10 @@ atom *atom_new(const char *str, int type, int len)
     return q;
 }
 
-char *atom_repr(atom *a, int type)
+char *atom_repr(atom *a)
 {
+    test(a, "reprensent no atom");
+    int type = a->type;
     if (type == DIGIT) {
         char s[20];
         uint32_t d;

@@ -1,17 +1,14 @@
 #include "common.h"
 #include "parser/token.h"
+#include "data/list.h"
 
+extern Token tokens[];
 int tokenize(char *);
 
-void read_from_tokens(int len)
+void parse(char *s)
 {
-    test(len > 0, "Read from no tokens.");
-    printf("In func read_from\n");
-}
-
-void parse(char *expr)
-{
-    int n_tokens = tokenize(expr);
+    int n_tokens = tokenize(s);
     Log("Tokenize into %d tokens.", n_tokens);
-    read_from_tokens(n_tokens);
+    list exp = read_from_tokens();
+    print_list(exp);
 }
