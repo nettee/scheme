@@ -9,6 +9,6 @@ typedef struct atom_ {
 } atom;
 
 atom *atom_new(const char *str, int type, int len);
-char *atom_repr(atom *);
+char *atom_repr(atom *, int type);
 
 #endif

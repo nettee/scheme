@@ -66,7 +66,9 @@ int tokenize(char *e)
                 if (this_type != NOTYPE) { 
                     tk.type = this_type;
                     tk.element = atom_new(substr_start, this_type, substr_len);
-                    Log("token[%d], %s \"%s\"", nr_token, type_repr(tk.element->type), atom_repr(tk.element));
+//                    char *s = strndup(substr_start, substr_len);
+//                    Log("token[%d], %s \"%s\"", nr_token, type_repr(tk.element->type), s);
+                    Log("token[%d], %s \"%s\", size %d", nr_token, type_repr(tk.element->type), atom_repr(tk.element, this_type), tk.element->len);
                     ++nr_token;
                 }
                 break; /* jump out of for loop */
