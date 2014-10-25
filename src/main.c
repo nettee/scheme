@@ -38,7 +38,6 @@ int main(int argc, char *argv[]) {
             break;
         case 's':
             interactive = false;
-            printf("Interpret from file %s\n", optarg);
             filename = strdup(optarg);
             break;
         default:
