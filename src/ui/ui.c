@@ -1,6 +1,5 @@
 #include "ui/ui.h"
 
-#include <signal.h>
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -27,44 +26,21 @@ char *rl_gets()
     return line_read;
 }
 
-/* This function will be called when you press <C-c>. And it will return to 
- * where you press <C-c>. If you are interesting in how it works, please
- * search for "Unix signal" in the Internet.
- */
-static void control_C(int signum) 
-{
-    printf("boom...\n");
-    if (nemu_state == RUNNING) {
-        nemu_state = INT;
-    }
-}
-
-void init_signal() 
-{
-    /* Register a signal handler. */
-    struct sigaction s;
-    memset(&s, 0, sizeof(s));
-    s.sa_handler = control_C;
-    int ret = sigaction(SIGINT, &s, NULL);
-    assert(ret == 0);
-}
-
-
 void main_loop() 
 {
-    char *sexp;
+    char *line;
 
     while(1) {
-        sexp = rl_gets();  /* get a line from stdin */
-        if (sexp == NULL) {
+        line = rl_gets();  /* get a line from stdin */
+        if (line == NULL) {
             printf("\n");
             return;
-        } else if (strlen(sexp) == 0) {
+        } else if (strlen(line) == 0) {
             continue;
-        } else if (strcmp(sexp, "exit") == 0) {
+        } else if (strcmp(line, "exit") == 0) {
             return;
         } else {
-            parse(sexp);
+            parse(line);
         }
     }
 }

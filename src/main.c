@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include <errno.h>
 
-void init_signal();
 void init_regex();
 void main_loop();
 void parse(char *);
@@ -23,11 +22,13 @@ void interpret(FILE *fp)
 int main(int argc, char *argv[]) {
     char *filename = NULL;
 
-    init_signal();
     init_regex();
 
-    int opt;
-    while((opt = getopt(argc, argv, "dqs:")) != -1) {
+    while (1) {
+        int opt = getopt(argc, argv, "dqs:");
+        if (opt == -1) {
+            break;
+        }
         switch(opt) {
         case 'd':
             enable_debug = true;
@@ -52,7 +53,8 @@ int main(int argc, char *argv[]) {
         assert(filename != NULL);
         FILE *fp = fopen(filename, "r");
         if (fp == NULL) {
-            fprintf(stderr, "%s: %s: %s\n", argv[0], optarg, strerror(errno));
+            fprintf(stderr, "%s: %s: %s\n",
+                    argv[0], optarg, strerror(errno));
             return 1;
         }
         interpret(fp);
