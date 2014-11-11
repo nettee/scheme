@@ -37,7 +37,7 @@ void main_loop()
             return;
         } else if (strlen(line) == 0) {
             continue;
-        } else if (strcmp(line, "exit") == 0) {
+        } else if (strcmp(line, "(exit)") == 0) {
             return;
         } else {
             parse(line);
