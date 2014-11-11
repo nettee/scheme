@@ -1,3 +1,4 @@
+#include "common.h"
 #include "data/list.h"
 #include "data/atom.h"
 #include "parser/token.h"
@@ -43,6 +44,33 @@ list make_nil()
     return make_head();
 }
 
+bool is_nil(list ls)
+{
+    return ls->next == NULL && ls->ntype == HEAD;
+}
+
+bool is_atom(list ls)
+{
+    return ls->ntype == ATOM;
+}
+
+list car(list ls)
+{
+    if (is_nil(ls)) {
+        test(0, "apply car to nil");
+    } else if (is_atom(ls)) {
+        test(0, "apply car to non-list");
+    }
+    listnode *firstnode = ls->next;
+    if (firstnode->ntype == ATOM) {
+        return make_atom(firstnode->item);
+    } else if (firstnode->ntype == SUBLIST) {
+        return firstnode->sub;
+    } else {
+        test(0, "unexpected condition in car");
+    }
+}
+
 list read_from_tokens()
 {
     Token tk;
@@ -69,7 +97,7 @@ list read_from_tokens()
 
 static void print_list_rec(list p)
 {
-    if (p->ntype == ATOM) {  /* single atom */
+    if (is_atom(p)) {  /* single atom */
         printf("%s", atom_repr(p->item));
     } else {  /* list */
         putchar('(');

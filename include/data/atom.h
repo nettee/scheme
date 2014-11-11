@@ -12,5 +12,6 @@ typedef struct atom_ {
 
 atom *atom_new(const char *str, int type, int len);
 char *atom_repr(atom *);
+bool atom_sameword(atom *, const char *);
 
 #endif

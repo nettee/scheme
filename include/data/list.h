@@ -15,6 +15,10 @@ typedef struct listnode_ {
 typedef listnode *list;
 
 list make_nil();
+bool is_nil(list);
+bool is_atom(list);
+
+list car(list);
 
 list read_from_tokens();
 

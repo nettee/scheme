@@ -6,7 +6,7 @@
 #include <readline/history.h>
 
 list parse(char *);
-void eval(list exp);
+list eval(list exp);
 
 int nemu_state = END;
 

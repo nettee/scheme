@@ -79,6 +79,13 @@ char *atom_repr(atom *a)
     }
 }
 
+bool atom_sameword(atom *a, const char *s)
+{
+    /* only meaningful for str */
+    return (a->type == IDENTIFIER)
+        && (strcmp((const char *)a->str, s) == 0);
+}
+
 /* for test use */
 void print_bucket()
 {
