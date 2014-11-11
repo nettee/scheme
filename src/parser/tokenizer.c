@@ -7,7 +7,6 @@
 
 #include "data/atom.h"
 #include "parser/token.h"
-#include "data/type.h"
 
 /* used by other modules */
 Token tokens[NR_TK];
@@ -47,6 +46,17 @@ void init_regex()
             regerror(ret, &re[i], error_msg, 128);
             test(0, "regex compilation failed: %s\n%s\n", error_msg, rules[i].regex);
         }
+    }
+}
+
+char *type_repr(int type)
+{
+    switch(type) {
+        case OPEN_BR: case CLOSE_BR: return "bracket";
+        case DIGIT: return "digit";
+        case IDENTIFIER: return "identifier";
+        default:
+            test(0, "No match type representation.");
     }
 }
 

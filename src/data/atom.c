@@ -6,7 +6,7 @@
 
 #include "common.h"
 #include "data/atom.h"
-#include "data/type.h"
+#include "parser/token.h"
 
 #define BUCKET_SIZE 64
 
@@ -97,4 +97,3 @@ void print_bytes(atom *it)
 {
     return;
 }
-        

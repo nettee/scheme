@@ -1,5 +1,4 @@
 #include "data/list.h"
-#include "data/type.h"
 #include "data/atom.h"
 #include "parser/token.h"
 

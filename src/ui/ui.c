@@ -1,11 +1,14 @@
 #include "ui/ui.h"
+#include "data/list.h"
 
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
+list parse(char *);
+void eval(list exp);
+
 int nemu_state = END;
-void parse(char *);
 
 /* Use the readline library to provide more flexibility.
  * Return a line read from standard input. */
@@ -40,7 +43,7 @@ void main_loop()
         } else if (strcmp(line, "(exit)") == 0) {
             return;
         } else {
-            parse(line);
+            eval(parse(line));
         }
     }
 }
