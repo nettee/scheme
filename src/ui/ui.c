@@ -43,7 +43,8 @@ void main_loop()
         } else if (strcmp(line, "(exit)") == 0) {
             return;
         } else {
-            eval(parse(line));
+            list result = eval(parse(line));
+            print_list(result);
         }
     }
 }

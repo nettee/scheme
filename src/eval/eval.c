@@ -15,13 +15,14 @@ list eval(list exp)
         printf("single atom!\n");
         return eval_atom(exp);
     } else {
-        list key = car(exp);
+        list key = list_car(exp);
         assert(is_atom(key));
         if (atom_sameword(key->item, "quote")) {
             printf("quote!\n");
+            return list_car(list_cdr(exp));
         } else {
             printf("eval, eval!\n");
+            return make_nil();
         }
-        return make_nil();
     }
 }

@@ -3,6 +3,8 @@
 #include "data/atom.h"
 #include "parser/token.h"
 
+#include <stdlib.h>
+
 extern Token tokens[];
 
 enum { HEAD, ATOM, SUBLIST };
@@ -54,7 +56,7 @@ bool is_atom(list ls)
     return ls->ntype == ATOM;
 }
 
-list car(list ls)
+list list_car(list ls)
 {
     if (is_nil(ls)) {
         test(0, "apply car to nil");
@@ -68,6 +70,43 @@ list car(list ls)
         return firstnode->sub;
     } else {
         test(0, "unexpected condition in car");
+    }
+}
+
+list list_cdr(list ls)
+{
+    if (is_nil(ls)) {
+        test(0, "apply cdr to nil");
+    } else if (is_atom(ls)) {
+        test(0, "apply cdr to non-list");
+    }
+    list newls = list_copy(ls);
+    listnode *q = newls->next;
+    newls->next = q->next;
+    free(q);
+    return newls;
+}
+
+list list_copy(list ls)
+{
+    if (is_nil(ls)) {
+        return make_nil();
+    } else if (is_atom(ls)) {
+        return make_atom(ls->item);
+    } else {
+        listnode *head = make_head();
+        listnode *tail = head;
+        listnode *current = ls->next;
+        while (current != NULL) {
+            if (current->ntype == ATOM) {
+                tail = insert_after(tail, list_copy(current));
+            } else {  /* sublist */
+                listnode *q = list_copy(current->sub);
+                tail = insert_after(tail, make_sublist(q));
+            }
+            current = current->next;
+        }
+        return head;
     }
 }
 

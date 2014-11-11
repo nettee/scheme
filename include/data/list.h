@@ -18,7 +18,9 @@ list make_nil();
 bool is_nil(list);
 bool is_atom(list);
 
-list car(list);
+list list_car(list);
+list list_cdr(list);
+list list_copy(list);
 
 list read_from_tokens();
 
