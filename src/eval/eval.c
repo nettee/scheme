@@ -20,8 +20,8 @@ list eval(list exp)
         if (atom_sameword(key->item, "quote")) {
             printf("quote!\n");
             return list_car(list_cdr(exp));
-        } else {
-            printf("eval, eval!\n");
+        } else {   /* a procedure */
+            printf("procedure!\n");
             return make_nil();
         }
     }
