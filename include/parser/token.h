@@ -3,7 +3,7 @@
 
 #include "data/atom.h"
 
-#define NR_TK 32
+#define NR_TK 1024
 
 typedef struct token {
     int type;
