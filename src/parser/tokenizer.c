@@ -13,6 +13,11 @@ Token tokens[NR_TK];
 int tokens_begin = 0;
 int tokens_end = 0;
 
+/* used by other modules */
+Token tokens[NR_TK];
+int begin = 0;
+int end = 0;
+
 static int nr_token;
 
 static struct rule {
