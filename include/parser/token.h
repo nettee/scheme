@@ -4,7 +4,7 @@
 
 typedef struct token {
     int type;
-    atom *element;
+    atom *ap;
 } Token;
 
 Token pop_token();

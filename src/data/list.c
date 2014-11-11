@@ -64,7 +64,7 @@ list read_from_tokens()
     } else if (tk.type == CLOSE_BR) {
         test(0, "Unexpected ')'");
     } else {  /* single atom */
-        return make_atom(tk.element);
+        return make_atom(tk.ap);
     }
 }
 

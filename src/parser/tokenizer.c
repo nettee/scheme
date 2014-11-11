@@ -11,8 +11,8 @@
 
 /* used by other modules */
 Token tokens[NR_TK];
-int begin = 0;
-int end = 0;
+int tokens_begin = 0;
+int tokens_end = 0;
 
 static int nr_token;
 
@@ -70,9 +70,9 @@ int tokenize(char *e)
                 int this_type = rules[i].token_type;
                 if (this_type != NOTYPE) { 
                     tokens[nr_token].type = this_type;
-                    tokens[nr_token].element = atom_new(substr_start, this_type, substr_len);
-                    Token tk = tokens[nr_token];
-                    Log("token[%d], %s \"%s\", size %d", nr_token, type_repr(tk.element->type), atom_repr(tk.element), tk.element->len);
+                    tokens[nr_token].ap = atom_new(substr_start, this_type, substr_len);
+                    atom *ap = tokens[nr_token].ap;
+                    Log("token[%d], %s \"%s\", size %d", nr_token, type_repr(ap->type), atom_repr(ap), ap->len);
                     ++nr_token;
                 }
                 break; /* jump out of for loop */
@@ -82,19 +82,19 @@ int tokenize(char *e)
             test(0, "no match at position %d\n%s\n%*.s^\n", position, e, position, "");
         }
     }
-    begin = 0;
-    end = nr_token;
+    tokens_begin = 0;
+    tokens_end = nr_token;
     return nr_token;
 }
 
 Token pop_token()
 {
-    test(begin < end, "Pop token fails");
-    return tokens[begin++];
+    test(tokens_begin < tokens_end, "Pop token fails");
+    return tokens[tokens_begin++];
 }
 
 Token first_token()
 {
-    test(begin <= end, "Bad tokens");
-    return tokens[begin];
+    test(tokens_begin <= tokens_end, "Bad tokens");
+    return tokens[tokens_begin];
 }
